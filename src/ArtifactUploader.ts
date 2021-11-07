@@ -40,6 +40,13 @@ export class GithubArtifactUploader implements ArtifactUploader {
         } catch (error: any) {
             if (error.status >= 500 && retry > 0) {
                 core.warning(`Failed to upload artifact ${artifact.name}. ${error.message}. Retrying...`)
+                try {
+                    await this.deleteUpdatedArtifacts([artifact], releaseId)
+                } catch (error: any)
+                {
+                    core.warning(`Failed to delete artifact ${artifact.name} after a failed upload. ${error.message}. Continuing...`)
+                }
+                
                 await this.uploadArtifact(artifact, releaseId, uploadUrl, retry - 1)
             } else {
                 if (this.throwsUploadErrors) {
