@@ -28,7 +28,7 @@ export class GithubArtifactUploader implements ArtifactUploader {
     private async uploadArtifact(artifact: Artifact,
                                  releaseId: number,
                                  uploadUrl: string,
-                                 retry = 3) {
+                                 retry = 10) {
         try {
             core.debug(`Uploading artifact ${artifact.name}...`)
             await this.releases.uploadArtifact(uploadUrl,
